@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:simpe/screens/splash/splashscreenController.dart';
 
-class SplashscreenWidget extends StatefulWidget {
+class SplashscreenWidget extends GetView<SplashScreenController> {
   @override
-  _SplashscreenWidgetState createState() => _SplashscreenWidgetState();
-}
-
-class _SplashscreenWidgetState extends State<SplashscreenWidget> {
+  final controller = Get.put(SplashScreenController());
   @override
   Widget build(BuildContext context) {
     // Figma Flutter Generator SplashscreenWidget - FRAME
@@ -17,7 +16,7 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
       BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width,
           maxHeight: MediaQuery.of(context).size.height),
-      // designSize: const Size(375, 812),
+      designSize: const Size(375, 812),
       context: context,
       minTextAdapt: true,
     );
@@ -27,7 +26,7 @@ class _SplashscreenWidgetState extends State<SplashscreenWidget> {
       Center(
           child: SizedBox.expand(
         child: Image.asset(
-          "assets/icons/login_background.png",
+          "assets/icons/splashscreenBack.png",
           fit: BoxFit.fitWidth,
         ),
       )),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:simpe/screens/splash/splash_screen.dart';
 
+import 'app/routs/app_routes.dart';
 import 'app/translations/trans.dart';
-import 'screens/splash/onboarding.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,21 +17,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Simpe',
-      getPages: [
-        GetPage(name: '/', page: () => SplashscreenWidget()),
-        GetPage(name: '/onBoarding', page: () => OnBoardingScreen()),
-      ],
+      defaultTransition: Transition.fadeIn,
+
+      getPages: Routes.allRoutes,
 
       translations: Messages(), // your translations
-      locale:
-          Locale('en', 'US'), // translations will be displayed in that locale
-      fallbackLocale: Locale('en', 'UK'), // specify the fallback loca
+      locale: const Locale(
+          'en', 'US'), // translations will be displayed in that locale
+      fallbackLocale: const Locale('en', 'UK'), // specify the fallback loca
 
       debugShowCheckedModeBanner: false,
+
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: "/onBoarding",
+      initialRoute: Routes.splash,
     );
   }
 }

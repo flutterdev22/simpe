@@ -14,7 +14,7 @@ Widget blueButton(context) {
       Container(
           width: 343,
           height: 44,
-          child: Stack(children: [
+          child: Stack(children: const [
             Positioned(
                 top: 12,
                 left: 138.5,
