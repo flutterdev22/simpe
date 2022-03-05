@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Simpe',
-      defaultTransition: Transition.fadeIn,
+      defaultTransition: Transition.rightToLeftWithFade,
 
       getPages: Routes.allRoutes,
 

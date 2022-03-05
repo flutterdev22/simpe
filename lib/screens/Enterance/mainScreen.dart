@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:simpe/app/themes/app_colors.dart';
+import 'package:simpe/screens/Home/homescreen_page.dart';
 import 'package:simpe/screens/Tabview/tabscreen.dart';
+
+import '../Home/tabs_view.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -59,7 +62,7 @@ class MainScreen extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            Get.to(() => TabScreenPage());
+            Get.to(() => TabView());
           },
           child: Container(
             width: 343.w,

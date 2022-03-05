@@ -38,7 +38,8 @@ dependencies:
   get: ^4.6.1
   flutter_screen_lock: ^5.0.6+1
   local_auth: ^1.1.11
-  persistent_bottom_nav_bar: ^4.0.2
+  flutter_svg: ^1.0.3
+  modal_bottom_sheet: ^2.0.0
 
 
 dev_dependencies:
@@ -67,6 +68,9 @@ flutter:
   assets:
     - assets/
     - assets/icons/
+    - assets/imges/
+    - assets/icons/settings/
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -86,6 +90,8 @@ flutter:
         - asset: assets/fonts/Inter-Medium.ttf
         - asset: assets/fonts/Inter-Regular.ttf
           weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 700
           
        
   #   - family: Trajan Pro

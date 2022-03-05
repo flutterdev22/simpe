@@ -1,88 +1,89 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:simpe/app/themes/app_colors.dart';
-import 'package:simpe/screens/Home/homescreen.dart';
-import 'package:simpe/screens/splash/splash_screen.dart';
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:get/get_rx/src/rx_types/rx_types.dart';
+// import 'package:get/get_state_manager/get_state_manager.dart';
+// import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+// import 'package:simpe/app/themes/app_colors.dart';
+// import 'package:simpe/screens/splash/splash_screen.dart';
 
-class TabScreenController extends GetxController {
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-  }
+// import '../Home/homescreen_page.dart';
 
-  @override
-  void onClose() {
-    // TODO: implement onClose
-    super.onClose();
-  }
+// class TabScreenController extends GetxController {
+//   @override
+//   void onInit() {
+//     // TODO: implement onInit
+//     super.onInit();
+//   }
 
-  var currentIndex = 0.obs;
-  var isCurrentUserBuyer = true.obs;
-  PageController pageController = PageController();
+//   @override
+//   void onClose() {
+//     // TODO: implement onClose
+//     super.onClose();
+//   }
 
-  PersistentTabController persistentTabController =
-      PersistentTabController(initialIndex: 0);
+//   var currentIndex = 0.obs;
+//   var isCurrentUserBuyer = true.obs;
+//   PageController pageController = PageController();
 
-  List<PersistentBottomNavBarItem> navBarsItems() {
-    return [
-      tabItem(
-        '',
-        icon: Image.asset("assets/icons/home.png"),
-      ),
-      tabItem(
-        '',
-        icon: Image.asset("assets/icons/brefecase.png"),
-      ),
-      tabItem(
-        '',
-        icon: Image.asset("assets/icons/qr.png"),
-      ),
-      tabItem(
-        '',
-        icon: Image.asset("assets/icons/setting.png"),
-      ),
-    ];
-  }
+//   PersistentTabController persistentTabController =
+//       PersistentTabController(initialIndex: 0);
 
-  setCurrentUserToSeller() {
-    isCurrentUserBuyer.value = false;
-  }
+//   List<PersistentBottomNavBarItem> navBarsItems() {
+//     return [
+//       tabItem(
+//         '',
+//         icon: Image.asset("assets/icons/home.png"),
+//       ),
+//       tabItem(
+//         '',
+//         icon: Image.asset("assets/icons/brefecase.png"),
+//       ),
+//       tabItem(
+//         '',
+//         icon: Image.asset("assets/icons/qr.png"),
+//       ),
+//       tabItem(
+//         '',
+//         icon: Image.asset("assets/icons/setting.png"),
+//       ),
+//     ];
+//   }
 
-  setCurrentUserToBuyer() {
-    isCurrentUserBuyer.value = true;
-  }
+//   setCurrentUserToSeller() {
+//     isCurrentUserBuyer.value = false;
+//   }
 
-  PersistentBottomNavBarItem tabItem(title, {required Widget icon, screen}) {
-    return PersistentBottomNavBarItem(
-      textStyle: TextStyle(
-        fontSize: 10.sp,
-      ),
-      icon: icon,
-      activeColorPrimary: kBlackColor,
-      inactiveColorPrimary: CupertinoColors.systemGrey,
-    );
-  }
+//   setCurrentUserToBuyer() {
+//     isCurrentUserBuyer.value = true;
+//   }
 
-  List<Widget> tabScreensBuyer = [
-    HomePage(), //Home
-    HomePage(), //Home
+//   PersistentBottomNavBarItem tabItem(title, {required Widget icon, screen}) {
+//     return PersistentBottomNavBarItem(
+//       textStyle: TextStyle(
+//         fontSize: 10.sp,
+//       ),
+//       icon: icon,
+//       activeColorPrimary: kBlackColor,
+//       inactiveColorPrimary: CupertinoColors.systemGrey,
+//     );
+//   }
 
-    HomePage(), //Home
-    HomePage(), //Home
+//   List<Widget> tabScreensBuyer = [
+//     HomePage(), //Home
+//     HomePage(), //Home
 
-    // MyTransactionsPage(), //My Transactions
-    // NotificationsPage(), //Notifications
-    // ProfilePage(), //My Account
-  ];
+//     HomePage(), //Home
+//     HomePage(), //Home
 
-  get getcurrentIndex => currentIndex;
-  changeCurrentIndex(int index) {
-    currentIndex.value = index;
-    persistentTabController.index = index;
-  }
-}
+//     // MyTransactionsPage(), //My Transactions
+//     // NotificationsPage(), //Notifications
+//     // ProfilePage(), //My Account
+//   ];
+
+//   get getcurrentIndex => currentIndex;
+//   changeCurrentIndex(int index) {
+//     currentIndex.value = index;
+//     persistentTabController.index = index;
+//   }
+// }
