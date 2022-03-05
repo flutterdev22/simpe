@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class AddBalance extends StatelessWidget {
   const AddBalance({Key? key}) : super(key: key);
@@ -116,6 +117,7 @@ class AddBalance extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     // Get.to(SuccessTransfer());
+                    Get.back();
                   },
                   child: Container(
                     width: double.infinity,

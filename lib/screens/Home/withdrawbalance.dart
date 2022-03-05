@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class WithDrawBalance extends StatelessWidget {
   const WithDrawBalance({Key? key}) : super(key: key);
@@ -115,6 +116,7 @@ class WithDrawBalance extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: InkWell(
                   onTap: () {
+                    Get.back();
                     // Get.to(SuccessTransfer());
                   },
                   child: Container(

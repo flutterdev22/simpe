@@ -103,6 +103,7 @@ class VisibilityScreen extends StatelessWidget {
               ),
               Container(
                 width: 343.w,
+
                 // height: 71.h,
                 padding: const EdgeInsets.all(16),
                 child: Row(

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:simpe/app/themes/app_colors.dart';
 import 'package:simpe/screens/Home/homescreen_page.dart';
+import 'package:simpe/screens/Home/tabs_view.dart';
 
 class SuccessTransfer extends StatelessWidget {
   const SuccessTransfer({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class SuccessTransfer extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: InkWell(
                 onTap: () {
-                  Get.offAll(HomePage());
+                  Get.offAll(TabView());
                 },
                 child: Container(
                   width: double.infinity,

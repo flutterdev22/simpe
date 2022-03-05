@@ -34,26 +34,80 @@ class OnBoardingScreen extends GetView<OnboardingController> {
             ),
             Expanded(
               child: PageView.builder(
+                  controller: controller.controllerPage,
                   scrollDirection: Axis.horizontal,
                   itemCount: 3,
                   onPageChanged: (value) {
                     controller.currentIndex.value = value;
                   },
                   itemBuilder: (context, index) {
-                    return pageViwer(
-                        "Instantâneo!",
-                        "Não leva nem um segundo fazer transferências na Simpe",
-                        index);
-                    // pageViwer(
-                    //     "Instantâneo!",
-                    //     "Não leva nem um segundo fazer transferências na Simpe",
-                    //     1),
-                    // pageViwer(
-                    //     "Instantâneo!",
-                    //     "Não leva nem um segundo fazer transferências na Simpe",
-                    //     2),
+                    return pageViwer(controller.titles[index],
+                        controller.descs[index], index);
                   }),
             ),
+            SizedBox(height: 24.h),
+            Obx(
+              () => Container(
+                decoration: BoxDecoration(),
+                padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                        width: 37.3333320617675,
+                        height: 4.h,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(9999),
+                            topRight: Radius.circular(9999),
+                            bottomLeft: Radius.circular(9999),
+                            bottomRight: Radius.circular(9999),
+                          ),
+                          color: controller.currentIndex == 0
+                              ? Color.fromRGBO(74, 90, 255, 1)
+                              : Color.fromRGBO(
+                                  172, 172, 176, 0.23999999463558197),
+                        ),
+                        child: Stack(children: <Widget>[])),
+                    SizedBox(width: 4.w),
+                    Container(
+                        width: 37.33333206176758,
+                        height: 4.h,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(9999),
+                            topRight: Radius.circular(9999),
+                            bottomLeft: Radius.circular(9999),
+                            bottomRight: Radius.circular(9999),
+                          ),
+                          color: controller.currentIndex == 1
+                              ? Color.fromRGBO(74, 90, 255, 1)
+                              : Color.fromRGBO(
+                                  172, 172, 176, 0.23999999463558197),
+                        ),
+                        child: Stack(children: <Widget>[])),
+                    SizedBox(width: 4.w),
+                    Container(
+                        width: 37.33333206176758,
+                        height: 4.h,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(9999),
+                            topRight: Radius.circular(9999),
+                            bottomLeft: Radius.circular(9999),
+                            bottomRight: Radius.circular(9999),
+                          ),
+                          color: controller.currentIndex == 2
+                              ? Color.fromRGBO(74, 90, 255, 1)
+                              : Color.fromRGBO(
+                                  172, 172, 176, 0.23999999463558197),
+                        ),
+                        child: Stack(children: <Widget>[])),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 24.h),
             SizedBox(
               height: 20.h,
             ),
@@ -61,85 +115,94 @@ class OnBoardingScreen extends GetView<OnboardingController> {
               () => GestureDetector(
                 onTap: () {
                   if (controller.currentIndex.value == 2) {
-                    screenLock(
-                      title: Text(
-                        'Insira seu pin',
-                        style: TextStyle(fontSize: 14.sp, color: Colors.black),
-                      ),
-                      context: context,
-                      correctString: '1234',
-                      customizedButtonChild: Icon(
-                        Icons.fingerprint,
-                        color: Colors.red,
-                      ),
-                      didUnlocked: () {
-                        MainScreen.show(context);
-                      },
-                      customizedButtonTap: () async {
-                        await localAuth(context);
-                      },
-                      didOpened: () async {
-                        await localAuth(context);
-                      },
-                      screenLockConfig: ScreenLockConfig(
-                        backgroundColor: Colors.white,
-                      ),
-                      secretsConfig: SecretsConfig(
-                        spacing: 15, // or spacingRatio
-                        padding: const EdgeInsets.all(40),
-                        secretConfig: SecretConfig(
-                          borderColor: kBlueColor,
-                          borderSize: 2.0,
-                          disabledColor: Colors.white,
-                          enabledColor: kBlueColor,
-                          height: 15,
-                          width: 15,
-                          build: (context,
-                              {required config, required enabled}) {
-                            return SizedBox(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: enabled
-                                      ? config.enabledColor
-                                      : config.disabledColor,
-                                  border: Border.all(
-                                    width: config.borderSize,
-                                    color: config.borderColor,
-                                  ),
-                                ),
-                                padding: EdgeInsets.all(10),
-                                width: config.width,
-                                height: config.height,
-                              ),
-                              width: config.width,
-                              height: config.height,
-                            );
-                          },
-                        ),
-                      ),
-                      inputButtonConfig: InputButtonConfig(
-                        textStyle:
-                            InputButtonConfig.getDefaultTextStyle(context)
-                                .copyWith(
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black),
-                        buttonStyle: OutlinedButton.styleFrom(
-                            shape: const RoundedRectangleBorder(),
-                            backgroundColor: Colors.grey.shade300,
-                            minimumSize: Size(200, 100),
-                            padding: EdgeInsets.all(15)),
-                      ),
-                      cancelButton: const Icon(
-                        Icons.close,
-                        color: Colors.black,
-                      ),
-                      deleteButton: const Icon(
-                        Icons.delete,
-                        color: Colors.black,
-                      ),
-                    ); // MainScreen());
+                    Get.to(MainScreen());
                   }
+                  if (controller.currentIndex.value < 3) {
+                    // controller.currentIndex += 1;
+                    controller.controllerPage.nextPage(
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.ease);
+                  }
+                  // // if (controller.currentIndex.value == 2) {
+                  // //   screenLock(
+                  // //     title: Text(
+                  // //       'Insira seu pin',
+                  // //       style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                  // //     ),
+                  // //     context: context,
+                  // //     correctString: '1234',
+                  // //     customizedButtonChild: Icon(
+                  // //       Icons.fingerprint,
+                  // //       color: Colors.red,
+                  // //     ),
+                  // //     didUnlocked: () {
+                  // //       MainScreen.show(context);
+                  // //     },
+                  // //     customizedButtonTap: () async {
+                  // //       await localAuth(context);
+                  // //     },
+                  // //     didOpened: () async {
+                  // //       await localAuth(context);
+                  // //     },
+                  // //     screenLockConfig: ScreenLockConfig(
+                  // //       backgroundColor: Colors.white,
+                  // //     ),
+                  // //     secretsConfig: SecretsConfig(
+                  // //       spacing: 15, // or spacingRatio
+                  // //       padding: const EdgeInsets.all(40),
+                  // //       secretConfig: SecretConfig(
+                  // //         borderColor: kBlueColor,
+                  // //         borderSize: 2.0,
+                  // //         disabledColor: Colors.white,
+                  // //         enabledColor: kBlueColor,
+                  // //         height: 15,
+                  // //         width: 15,
+                  // //         build: (context,
+                  // //             {required config, required enabled}) {
+                  // //           return SizedBox(
+                  // //             child: Container(
+                  // //               decoration: BoxDecoration(
+                  // //                 shape: BoxShape.circle,
+                  // //                 color: enabled
+                  // //                     ? config.enabledColor
+                  // //                     : config.disabledColor,
+                  // //                 border: Border.all(
+                  // //                   width: config.borderSize,
+                  // //                   color: config.borderColor,
+                  // //                 ),
+                  // //               ),
+                  // //               padding: EdgeInsets.all(10),
+                  // //               width: config.width,
+                  // //               height: config.height,
+                  // //             ),
+                  // //             width: config.width,
+                  // //             height: config.height,
+                  // //           );
+                  // //         },
+                  // //       ),
+                  // //     ),
+                  // //     inputButtonConfig: InputButtonConfig(
+                  // //       textStyle:
+                  // //           InputButtonConfig.getDefaultTextStyle(context)
+                  // //               .copyWith(
+                  // //                   fontWeight: FontWeight.normal,
+                  // //                   color: Colors.black),
+                  // //       buttonStyle: OutlinedButton.styleFrom(
+                  // //           shape: const RoundedRectangleBorder(),
+                  // //           backgroundColor: Colors.grey.shade300,
+                  // //           minimumSize: Size(200, 100),
+                  // //           padding: EdgeInsets.all(15)),
+                  // //     ),
+                  // //     cancelButton: const Icon(
+                  // //       Icons.close,
+                  // //       color: Colors.black,
+                  // //     ),
+                  // //     deleteButton: const Icon(
+                  // //       Icons.delete,
+                  // //       color: Colors.black,
+                  // //     ),
+                  // //   ); // MainScreen());
+                  // }
                 },
                 child: Container(
                   width: 343.w,
@@ -158,8 +221,8 @@ class OnBoardingScreen extends GetView<OnboardingController> {
                   child: Center(
                     child: Text(
                       controller.currentIndex.value <= 1
-                          ? 'Continuar'
-                          : "Iniciar",
+                          ? 'Continue'
+                          : "Continue",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           color: Color.fromRGBO(252, 252, 252, 1),
@@ -234,63 +297,6 @@ class OnBoardingScreen extends GetView<OnboardingController> {
                 fontWeight: FontWeight.normal,
                 height: 1.5 /*PERCENT not supported*/
                 ),
-          ),
-          SizedBox(height: 16.h),
-          Container(
-            decoration: BoxDecoration(),
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                    width: 37.3333320617675,
-                    height: 4.h,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(9999),
-                        topRight: Radius.circular(9999),
-                        bottomLeft: Radius.circular(9999),
-                        bottomRight: Radius.circular(9999),
-                      ),
-                      color: i == 0
-                          ? Color.fromRGBO(74, 90, 255, 1)
-                          : Color.fromRGBO(172, 172, 176, 0.23999999463558197),
-                    ),
-                    child: Stack(children: <Widget>[])),
-                SizedBox(width: 4.w),
-                Container(
-                    width: 37.33333206176758,
-                    height: 4.h,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(9999),
-                        topRight: Radius.circular(9999),
-                        bottomLeft: Radius.circular(9999),
-                        bottomRight: Radius.circular(9999),
-                      ),
-                      color: i == 1
-                          ? Color.fromRGBO(74, 90, 255, 1)
-                          : Color.fromRGBO(172, 172, 176, 0.23999999463558197),
-                    ),
-                    child: Stack(children: <Widget>[])),
-                SizedBox(width: 4.w),
-                Container(
-                    width: 37.33333206176758,
-                    height: 4.h,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(9999),
-                        topRight: Radius.circular(9999),
-                        bottomLeft: Radius.circular(9999),
-                        bottomRight: Radius.circular(9999),
-                      ),
-                      color: i == 2
-                          ? Color.fromRGBO(74, 90, 255, 1)
-                          : Color.fromRGBO(172, 172, 176, 0.23999999463558197),
-                    ),
-                    child: Stack(children: <Widget>[])),
-              ],
-            ),
           ),
         ],
       ),

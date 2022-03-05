@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 import 'package:simpe/app/themes/app_colors.dart';
 import 'package:simpe/screens/Home/homescreen_page.dart';
 import 'package:simpe/screens/Tabview/tabscreen.dart';
+import 'package:simpe/screens/login/login_screen.dart';
+import 'package:simpe/screens/login/otp_screen.dart';
+import 'package:simpe/screens/signup/signup_screen.dart';
 
 import '../Home/tabs_view.dart';
 
@@ -27,12 +30,14 @@ class MainScreen extends StatelessWidget {
           height: 20.h,
         ),
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            Get.to(SignupScreen());
+          },
           child: Container(
             width: 343.w,
             height: 44.h,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
                 bottomLeft: Radius.circular(8),
@@ -43,7 +48,7 @@ class MainScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Center(
               child: Text(
-                'Criar conta',
+                'Create account',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     color: kBlueColor,
@@ -62,7 +67,7 @@ class MainScreen extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            Get.to(() => TabView());
+            Get.to(() => LoginScreen());
           },
           child: Container(
             width: 343.w,
@@ -80,7 +85,7 @@ class MainScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Center(
               child: Text(
-                'Entrar',
+                'Login',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     color: Color.fromRGBO(252, 252, 252, 1),
@@ -97,6 +102,23 @@ class MainScreen extends StatelessWidget {
         SizedBox(
           height: 32.h,
         ),
+        InkWell(
+          onTap: () {
+            Get.to(OtpScreen());
+          },
+          child: Text(
+            "Recover access",
+            style: TextStyle(
+              color: Color(0xff423fff),
+              fontSize: 18.sp,
+              fontFamily: "DMSans",
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20.h,
+        ),
       ]),
     ));
   }
@@ -109,7 +131,7 @@ class MainScreen extends StatelessWidget {
           SizedBox(
             width: 351.w,
             height: 285.h,
-            child: Image.asset("assets/icons/save.png"),
+            child: Image.asset("assets/imges/money in the safe.png"),
           ),
           SizedBox(height: 68.h),
           const Text(
@@ -126,7 +148,7 @@ class MainScreen extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           const Text(
-            "A forma mais facil de transferir ou mandar dinheiro!",
+            "The easiest way to transfer or send money",
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Color.fromRGBO(172, 172, 176, 0.800000011920929),

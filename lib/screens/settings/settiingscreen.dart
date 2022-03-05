@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:simpe/app/themes/app_colors.dart';
+import 'package:simpe/screens/settings/changepin.dart';
 import 'package:simpe/screens/settings/mysimpe_screen.dart';
 import 'package:simpe/screens/settings/seetting_controller.dart';
 import 'package:simpe/screens/settings/visibilty_screen.dart';
@@ -125,12 +128,24 @@ class SettingScreen extends StatelessWidget {
                     height: 10.h,
                   ),
                   settiingTile("assets/icons/settings/Account-box.svg",
-                      "Validate identity", "To use all features", () {}),
+                      "Validate identity", "To use all features", () {
+                    Get.to(MySimpeScreen());
+                    screenLock(
+                      context: context,
+                      correctString: '1234',
+                    );
+                  }),
                   SizedBox(
                     height: 5.h,
                   ),
                   settiingTile("assets/icons/settings/key-2.svg", "Change pin",
-                      "Code used to access the application", () {}),
+                      "Code used to access the application", () {
+                    Get.to(ChangePinScreen());
+                    // screenLock(
+                    //   context: context,
+                    //   correctString: '1234',
+                    // );
+                  }),
                   SizedBox(
                     height: 10.h,
                   ),
@@ -149,7 +164,164 @@ class SettingScreen extends StatelessWidget {
                     height: 10.h,
                   ),
                   settiingTile("assets/icons/settings/globe.svg", "Language",
-                      "Portuguese", () {}),
+                      "Portuguese", () {
+                    showMaterialModalBottomSheet(
+                        context: context,
+                        builder: (context) => SizedBox(
+                              height: 250.h,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 30.h,
+                                  ),
+                                  Container(
+                                    width: 359.w,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                    ),
+                                    child: Text(
+                                      "Choose language",
+                                      style: TextStyle(
+                                        color: Color(0xff1e1e20),
+                                        fontSize: 14.sp,
+                                        fontFamily: "DMSans",
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  Container(
+                                    width: 327.w,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: SizedBox(
+                                            child: Text(
+                                              "English",
+                                              style: TextStyle(
+                                                color: Color(0xff1e1e20),
+                                                fontSize: 14,
+                                                fontFamily: "DM Sans",
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Container(
+                                          width: 16,
+                                          height: 16,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 16,
+                                                height: 16,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 16.h,
+                                  ),
+                                  Container(
+                                    width: 359.w,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                    ),
+                                    height: 1,
+                                    color: Colors.grey.withOpacity(0.1),
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  Container(
+                                    width: 327.w,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: SizedBox(
+                                            child: Text(
+                                              "Portuguese",
+                                              style: TextStyle(
+                                                color: Color(0xff1e1e20),
+                                                fontSize: 14,
+                                                fontFamily: "DM Sans",
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Container(
+                                          width: 16,
+                                          height: 16,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 16,
+                                                height: 16,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  color:
+                                                      Colors.grey.withAlpha(0),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 16.h,
+                                  ),
+                                ],
+                              ),
+                            ));
+                  }),
                   SizedBox(
                     height: 10.h,
                   ),
