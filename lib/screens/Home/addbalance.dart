@@ -36,7 +36,7 @@ class AddBalance extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: Text(
-                  "Add balance",
+                  "Add balance".tr,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: Color(0xff1e1e20),
@@ -60,7 +60,7 @@ class AddBalance extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: Text(
-                  "Choose how you want to add money to your Simpe account",
+                  "Choose how you want to add money to your Simpe account".tr,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: Color(0xff1e1e20),
@@ -79,7 +79,7 @@ class AddBalance extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(12))),
                 child: ListTile(
                   title: Text(
-                    "Disabled",
+                    "Disabled".tr,
                     style: TextStyle(
                       color: Color(0xff1e1e20),
                       fontSize: 14.sp,
@@ -94,7 +94,7 @@ class AddBalance extends StatelessWidget {
                   subtitle: SizedBox(
                     width: 199.h,
                     child: Text(
-                      "This function is not available for your country",
+                      "This function is not available for your country".tr,
                       style: TextStyle(
                         color: Color(0xff1e1e20),
                         fontSize: 12.sp,
@@ -109,7 +109,7 @@ class AddBalance extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 50.h,
+                height: 20.h,
               ),
               Padding(
                 padding:
@@ -131,7 +131,7 @@ class AddBalance extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          "Continue",
+                          "Continue".tr,
                           style: TextStyle(
                             color: Color(0xfffcfcfc),
                             fontSize: 14.sp,

@@ -1,14 +1,136 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:simpe/screens/signup/signup_enterusername.dart';
-
+import 'package:simpe/services/apis.dart';
+import 'package:simpe/services/keys.dart';
 import '../../app/themes/app_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDropdowns();
+  }
+
+  bool isLoading = false;
+  String ticket = "";
+
+  TextEditingController name= TextEditingController();
+  TextEditingController email= TextEditingController();
+  TextEditingController phone= TextEditingController();
+
+   var country,currency,language;
+
+  List items1 = [];
+  List items2 = [];
+  List items3 = [];
+
+  ////////////////////////Get All Dropdowns
+  Future<void> fetchDropdowns() async {
+    final response = await http.get(Uri.parse('${Apis.baseUrl}${Apis.configs}'),
+      headers: {
+        "Content-Type": contentType
+      },);
+    if (response.statusCode == 200) {
+      var resBody = json.decode(response.body);
+
+      if(mounted) {
+        setState(() {
+          items1 = resBody["countries"];
+          items2 = resBody["currencies"];
+          items3 = resBody["languages"];
+
+          country = resBody["countries"][0].toString();
+          currency = resBody["currencies"][0].toString();
+          language = resBody["languages"][0].toString();
+         });
+      }
+    } else {
+      throw Exception('Unexpected error occurred!');
+    }
+  }
+
+
+  Future<void> userRegister(String name, String email, String phone, String country, String currency,String language) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    try{
+      var response = await http.post(
+        Uri.parse('${Apis.baseUrl}${Apis.register}'),
+        headers: {
+         "Content-Type": contentType
+        },
+        body: jsonEncode(<String, String>{
+          "full_name": name,
+          "email": email,
+          "phone_number": phone,
+          "country": country,
+          "currency": currency,
+          "language": language
+        }),
+      );
+      var res = jsonDecode(response.body);
+
+      if (response.statusCode == 201) {
+        Get.snackbar("Success", "Registration Successful.",backgroundColor: Colors.green,colorText: Colors.white);
+
+        if(mounted){
+          setState(() {
+            isLoading = false;
+            ticket = res["ticket"];
+          });
+        }
+
+        Get.to(SignupEnterUsername(ticket:ticket));
+      }
+      else {
+        Get.snackbar("Error", res["_embedded"]["errors"][0]["message"].toString(),backgroundColor: Colors.amberAccent,colorText: Colors.white);
+        if(mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+        throw Exception(res);
+      }
+
+    } on SocketException {
+     Get.snackbar("Error", "No Internet Connection.",backgroundColor: Colors.red,colorText: Colors.white);
+      if(mounted) {
+        setState(() {
+        isLoading = false;
+      });
+      }
+    } on HttpException {
+      if(mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      Get.snackbar("Error", "Couldn't find the data 😱.",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+    } on FormatException {
+      if(mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      Get.snackbar("Error", "Bad response format 👎",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +142,42 @@ class SignupScreen extends StatelessWidget {
       context: context,
       minTextAdapt: true,
     );
+
     return Scaffold(
       bottomSheet: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: InkWell(
+        child:isLoading==false? InkWell(
           onTap: () {
-            Get.to(SignupEnterUsername());
+
+            if (name.text.isEmpty) {
+              Get.snackbar("Required", "Name is required.",backgroundColor: Colors.red,colorText: Colors.white);
+            } else if (email.text.isEmpty) {
+              Get.snackbar("Required", "Email is required.",backgroundColor: Colors.red,colorText: Colors.white);
+            }
+            else if (RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email.text) == false) {
+              Get.snackbar("Required", "Enter a valid email address.",backgroundColor: Colors.red,colorText: Colors.white);
+            }
+            else if (phone.text.isEmpty) {
+              Get.snackbar("Required", "Phone number is required.",backgroundColor: Colors.red,colorText: Colors.white);
+            }
+            else if (country=="null") {
+              Get.snackbar("Required", "Country is required.",backgroundColor: Colors.red,colorText: Colors.white);
+            }
+            else if (currency=="null") {
+              Get.snackbar("Required", "Currency is required.",backgroundColor: Colors.red,colorText: Colors.white);
+            }
+            else if (language=="null") {
+              Get.snackbar("Required", "Language is required.",backgroundColor: Colors.red,colorText: Colors.white);
+            }
+            else{
+              if(mounted){
+                setState(() {
+                  isLoading = true;
+                });
+              }
+           userRegister(name.text.toString(),email.text.toString(), phone.text.toString(),country.toString(),currency.toString(), language.toString());
+            }
+
           },
           child: Container(
             width: double.infinity,
@@ -39,7 +191,7 @@ class SignupScreen extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  "Confirm",
+                  "Confirm".tr,
                   style: TextStyle(
                     color: Color(0xfffcfcfc),
                     fontSize: 14.sp,
@@ -50,7 +202,7 @@ class SignupScreen extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        ):const Center(child:CircularProgressIndicator(color: kBlueColor,),),
       ),
       backgroundColor: Colors.white,
       body: CustomScrollView(slivers: [
@@ -62,14 +214,14 @@ class SignupScreen extends StatelessWidget {
         SliverAppBar(
           elevation: 0,
           automaticallyImplyLeading: true,
-          iconTheme: IconThemeData(
+          iconTheme:const IconThemeData(
             color: kBlackColor, //change your color here
           ),
           pinned: true,
           centerTitle: false,
           backgroundColor: Colors.white,
           title: Text(
-            "Create account",
+            "Create account".tr,
             style: TextStyle(
               color: Color(0xff1e1e20),
               fontSize: 14.sp,
@@ -78,6 +230,7 @@ class SignupScreen extends StatelessWidget {
             ),
           ),
         ),
+
         SliverToBoxAdapter(
           child: Column(
             children: [
@@ -87,7 +240,7 @@ class SignupScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Name",
+                  "Name".tr,
                   style: TextStyle(
                     color: Color(0xccacacb0),
                     fontSize: 14.sp,
@@ -113,6 +266,7 @@ class SignupScreen extends StatelessWidget {
                   horizontal: 16,
                 ),
                 child: TextFormField(
+                  controller: name,
                   style: TextStyle(
                     color: kBlackColor,
                     fontSize: 14.sp,
@@ -140,7 +294,7 @@ class SignupScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Email",
+                  "Email".tr,
                   style: TextStyle(
                     color: Color(0xccacacb0),
                     fontSize: 14.sp,
@@ -181,6 +335,7 @@ class SignupScreen extends StatelessWidget {
                     SizedBox(width: 8.w),
                     Expanded(
                       child: TextFormField(
+                        controller: email,
                         style: TextStyle(
                           color: kBlackColor,
                           fontSize: 14.sp,
@@ -211,7 +366,7 @@ class SignupScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Phone number",
+                  "Phone number".tr,
                   style: TextStyle(
                     color: Color(0xccacacb0),
                     fontSize: 14.sp,
@@ -237,6 +392,7 @@ class SignupScreen extends StatelessWidget {
                   horizontal: 16,
                 ),
                 child: TextFormField(
+                  controller: phone,
                   style: TextStyle(
                     color: kBlackColor,
                     fontSize: 14.sp,
@@ -264,9 +420,9 @@ class SignupScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Country",
+                  "Country".tr,
                   style: TextStyle(
-                    color: Color(0xccacacb0),
+                    color:const Color(0xccacacb0),
                     fontSize: 14.sp,
                     fontFamily: "DMSans",
                   ),
@@ -294,26 +450,34 @@ class SignupScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: DropdownButton<String>(
+
                         underline: SizedBox.shrink(),
                         icon: SizedBox.shrink(),
                         hint: Text(
-                          "EUA",
+                          "Select Country",
                           style: TextStyle(
                             color: Color(0xff1e1e20),
                             fontSize: 14.sp,
                           ),
                         ),
-                        items: <String>['EUA', 'EUA', 'EUA', 'EUA']
-                            .map((String value) {
+                        value:country,
+                        items: items1.map((items) {
                           return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
+                            value: items,
+                            child: Text(items.toString()),
                           );
                         }).toList(),
-                        onChanged: (_) {},
+                        onChanged: (String? changedValue) {
+                          if(mounted) {
+                            setState(() {
+                            country =changedValue!;
+                          });
+                          }
+
+                        },
                       ),
                     ),
-                    Icon(Icons.keyboard_arrow_down)
+                   const Icon(Icons.keyboard_arrow_down)
                   ],
                 ),
               ),
@@ -323,9 +487,9 @@ class SignupScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Currency",
+                  "Currency".tr,
                   style: TextStyle(
-                    color: Color(0xccacacb0),
+                    color:const Color(0xccacacb0),
                     fontSize: 14.sp,
                     fontFamily: "DMSans",
                   ),
@@ -340,10 +504,10 @@ class SignupScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                   border: Border.all(
-                    color: Color(0xcce9ebec),
+                    color:const Color(0xcce9ebec),
                     width: 1,
                   ),
-                  color: Color(0xcce9ebec),
+                  color:const Color(0xcce9ebec),
                 ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -353,25 +517,32 @@ class SignupScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: DropdownButton<String>(
-                        underline: SizedBox.shrink(),
-                        icon: SizedBox.shrink(),
+                        value:currency,
+                        underline:const SizedBox.shrink(),
+                        icon:const SizedBox.shrink(),
                         hint: Text(
-                          "USD",
+                          "Select Currency",
                           style: TextStyle(
-                            color: Color(0xff1e1e20),
+                            color:const Color(0xff1e1e20),
                             fontSize: 14.sp,
                           ),
                         ),
-                        items: <String>['USD', 'PKR'].map((String value) {
+                        items: items2.map((items) {
                           return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
+                            value: items,
+                            child: Text(items.toString()),
                           );
                         }).toList(),
-                        onChanged: (_) {},
+                        onChanged: (String? changedValue) {
+                          if(mounted) {
+                            setState(() {
+                              currency = changedValue!;
+                            });
+                          }
+                        },
                       ),
                     ),
-                    Icon(Icons.keyboard_arrow_down)
+                   const Icon(Icons.keyboard_arrow_down)
                   ],
                 ),
               ),
@@ -381,9 +552,9 @@ class SignupScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Language",
+                  "Language".tr,
                   style: TextStyle(
-                    color: Color(0xccacacb0),
+                    color:const Color(0xccacacb0),
                     fontSize: 14.sp,
                     fontFamily: "DMSans",
                   ),
@@ -392,16 +563,16 @@ class SignupScreen extends StatelessWidget {
               SizedBox(
                 height: 10.h,
               ),
-              Container(
+                Container(
                 width: 327.w,
                 height: 44.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                   border: Border.all(
-                    color: Color(0xcce9ebec),
+                    color:const Color(0xcce9ebec),
                     width: 1,
                   ),
-                  color: Color(0xcce9ebec),
+                  color:const Color(0xcce9ebec),
                 ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -411,28 +582,33 @@ class SignupScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: DropdownButton<String>(
-                        underline: SizedBox.shrink(),
-                        icon: SizedBox.shrink(),
+                        underline:const SizedBox.shrink(),
+                        icon:const SizedBox.shrink(),
+                        value:language,
                         hint: Text(
-                          "English",
+                          "Select Language",
                           style: TextStyle(
                             color: Color(0xff1e1e20),
                             fontSize: 14.sp,
                           ),
                         ),
-                        items: <String>[
-                          'English',
-                          'Portugal',
-                        ].map((String value) {
+                        items: items3.map((items) {
                           return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
+                            value: items,
+                            child: Text(items.toString()),
                           );
                         }).toList(),
-                        onChanged: (_) {},
+                        onChanged: (String? changedValue) {
+                          if(mounted) {
+                            setState(() {
+                              language = changedValue!;
+                            });
+                          }
+
+                        },
                       ),
                     ),
-                    Icon(Icons.keyboard_arrow_down)
+                   const Icon(Icons.keyboard_arrow_down)
                   ],
                 ),
               ),

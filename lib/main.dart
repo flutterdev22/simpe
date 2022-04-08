@@ -18,13 +18,10 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Simpe',
       defaultTransition: Transition.rightToLeftWithFade,
-
       getPages: Routes.allRoutes,
-
       translations: Messages(), // your translations
-      locale: const Locale(
-          'en', 'US'), // translations will be displayed in that locale
-      fallbackLocale: const Locale('en', 'UK'), // specify the fallback loca
+      locale: const Locale('en', 'US'), // translations will be displayed in that locale
+      fallbackLocale: const Locale('en', 'UK'), // specify the fallback local
 
       debugShowCheckedModeBanner: false,
 

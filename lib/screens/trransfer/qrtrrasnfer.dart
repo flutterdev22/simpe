@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:simpe/app/themes/app_colors.dart';
 
 class QrTransfer extends StatelessWidget {
@@ -31,7 +32,7 @@ class QrTransfer extends StatelessWidget {
           pinned: true,
           backgroundColor: Colors.transparent,
           title: Text(
-            "Transf/QR code",
+            "Transf/QR code".tr,
             style: TextStyle(
               color: Color(0xff1e1e20),
               fontSize: 24.sp,
@@ -76,10 +77,10 @@ class QrTransfer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Generate a QR code to receive",
+                        "Generate a QR code to receive".tr,
                         style: TextStyle(
                           color: Color(0xff423fff),
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontFamily: "DM Sans",
                           fontWeight: FontWeight.w500,
                         ),

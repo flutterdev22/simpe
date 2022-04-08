@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:simpe/app/themes/app_colors.dart';
 import 'package:simpe/screens/Home/homescreen_page.dart';
 import 'package:simpe/screens/payments/paymentscreen.dart';
@@ -17,6 +17,8 @@ class TabView extends StatefulWidget {
 
 class _TabViewState extends State<TabView> {
   int selecctedTab = 0;
+
+
 
   PageController controller = PageController();
   var tabs = [
@@ -49,7 +51,7 @@ class _TabViewState extends State<TabView> {
           },
           items: [
             BottomNavigationBarItem(
-                label: "Home",
+                label: "Home".tr,
                 activeIcon: SizedBox(
                     width: 30.w,
                     height: 30.h,
@@ -65,7 +67,7 @@ class _TabViewState extends State<TabView> {
                       color: Color(0XFFACACB0),
                     ))),
             BottomNavigationBarItem(
-                label: "Payment",
+                label: "Payment".tr,
                 activeIcon: SizedBox(
                     width: 30.w,
                     height: 30.h,
@@ -81,7 +83,7 @@ class _TabViewState extends State<TabView> {
                       color: Color(0XFFACACB0),
                     ))),
             BottomNavigationBarItem(
-                label: "QR Code",
+                label: "QR Code".tr,
                 activeIcon: SizedBox(
                   width: 30.w,
                   height: 30.h,
@@ -98,7 +100,7 @@ class _TabViewState extends State<TabView> {
                       color: Color(0XFFACACB0),
                     ))),
             BottomNavigationBarItem(
-                label: "Setting",
+                label: "Setting".tr,
                 activeIcon: SizedBox(
                   width: 30.w,
                   height: 30.h,
@@ -115,12 +117,14 @@ class _TabViewState extends State<TabView> {
                       color: Color(0XFFACACB0),
                     )))
           ]),
-      body: PageView(
+      body:PageView(
         controller: controller,
         onPageChanged: (tt) {
-          setState(() {
-            this.selecctedTab = tt;
+          if(mounted) {
+            setState(() {
+            selecctedTab = tt;
           });
+          }
         },
         children: tabs,
       ),

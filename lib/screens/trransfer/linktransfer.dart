@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:simpe/app/themes/app_colors.dart';
 
 class LinkTransfer extends StatelessWidget {
@@ -31,7 +32,7 @@ class LinkTransfer extends StatelessWidget {
           pinned: true,
           backgroundColor: Colors.transparent,
           title: Text(
-            "Transf/link",
+            "Transf/link".tr,
             style: TextStyle(
               color: Color(0xff1e1e20),
               fontSize: 24.sp,
@@ -87,7 +88,7 @@ class LinkTransfer extends StatelessWidget {
                                 fontFamily: "DMSans",
                                 fontWeight: FontWeight.normal,
                               ),
-                              hintText: "Paste the link here"),
+                              hintText: "Paste the link here".tr),
                         )),
                   ],
                 ),
@@ -121,7 +122,7 @@ class LinkTransfer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Continue",
+                        "Continue".tr,
                         style: TextStyle(
                           color: Color(0xfffcfcfc),
                           fontSize: 14.sp,
@@ -145,10 +146,10 @@ class LinkTransfer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Create link to receive",
+                        "Create link to receive".tr,
                         style: TextStyle(
                           color: Color(0xff423fff),
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontFamily: "DM Sans",
                           fontWeight: FontWeight.w500,
                         ),

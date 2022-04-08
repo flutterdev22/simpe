@@ -1,18 +1,101 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:simpe/screens/settings/seetting_controller.dart';
+import 'package:http/http.dart' as http;
 import 'package:simpe/services/reuseableData.dart';
-
 import '../../app/themes/app_colors.dart';
-import 'newPin.dart';
+import '../../services/apis.dart';
+import '../../services/keys.dart';
+import '../login/login_screen.dart';
 
-class ChangePinScreen extends StatelessWidget {
-  ChangePinScreen({Key? key}) : super(key: key);
+class NewPinScreen extends StatefulWidget {
+  String oldCode;
+  NewPinScreen({Key? key,required this.oldCode}) : super(key: key);
 
+  @override
+  State<NewPinScreen> createState() => _NewPinScreenState();
+}
+
+class _NewPinScreenState extends State<NewPinScreen> {
   SettingController controller = Get.find<SettingController>();
+
+  bool isLoad = false;
+
+  Future<void> changePin(String code) async{
+
+    try{
+      var response = await http.post(
+        Uri.parse('${Apis.baseUrl}${Apis.users}${reuseableData.username}/pin/change'),
+        headers: {
+          "Content-Type": contentType,
+          "Authorization": "Bearer ${reuseableData.token}"
+        },
+        body: jsonEncode(<String, String>{
+          "old_pin_code": widget.oldCode,
+          "new_pin_code": code
+        }),
+      );
+
+      if (response.statusCode == 204) {
+        if(mounted){
+          setState(() {
+            isLoad = false;
+            reuseableData.pin =code;
+          });
+        }
+
+        Get.snackbar("Success", "Pin changed Successfully!",backgroundColor: Colors.green,colorText: Colors.white);
+        Future.delayed(
+            const Duration(seconds: 2),
+                (){
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (BuildContext context) => LoginScreen()),
+                          (route) => false);
+                  Get.snackbar("Notice", "Login Again.",colorText: Colors.white,backgroundColor: Colors.blueAccent);
+                }
+        );
+      }
+      else {
+        if(mounted){
+          setState(() {
+            isLoad = false;
+          });
+        }
+        Get.snackbar("Error", "Something went wrong",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+        throw Exception("Error");
+      }
+
+    } on SocketException {
+      if(mounted){
+        setState(() {
+          isLoad = false;
+        });
+      }
+      Get.snackbar("Error", "No Internet Connection.",backgroundColor: Colors.red,colorText: Colors.white);
+    } on HttpException {
+      if(mounted){
+        setState(() {
+          isLoad = false;
+        });
+      }
+      Get.snackbar("Error", "Couldn't find the data 😱.",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+    } on FormatException {
+      if(mounted){
+        setState(() {
+          isLoad = false;
+        });
+      }
+      Get.snackbar("Error", "Bad response format 👎",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +111,16 @@ class ChangePinScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         onPressed: (){
-          if (controller.pin.value.toString() == "") {
-            Get.snackbar("Warning", "Pin is Empty");
+          if(mounted){
+            setState(() {
+              isLoad = true;
+            });
           }
-          if (controller.pin.value.toString() == reuseableData.pin) {
-            Get.to(NewPinScreen(oldCode: controller.pin.value.toString(),));
-          }
-          else{
-            Get.snackbar("Error", "Old Pin does not matches");
-          }
+          changePin(controller.pin2.value.toString());
         },
-        child: Icon(Icons.send,color: kBlueColor,),
+        child:const Icon(Icons.send,color: kBlueColor,),
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar:isLoad == false? Container(
         width: 327.w,
         margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 80.h),
         child: Column(
@@ -58,7 +138,7 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value += "1";
+                        controller.pin2.value += "1";
                       },
                       child: Container(
                         height: 80,
@@ -93,7 +173,7 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value += "2";
+                        controller.pin2.value += "2";
                       },
                       child: Container(
                         height: 80,
@@ -128,7 +208,7 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value += "3";
+                        controller.pin2.value += "3";
                       },
                       child: Container(
                         height: 80,
@@ -173,7 +253,7 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value += "4";
+                        controller.pin2.value += "4";
                       },
                       child: Container(
                         height: 80,
@@ -208,7 +288,7 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value += "5";
+                        controller.pin2.value += "5";
                       },
                       child: Container(
                         height: 80,
@@ -243,7 +323,7 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value += "6";
+                        controller.pin2.value += "6";
                       },
                       child: Container(
                         height: 80,
@@ -288,7 +368,7 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value += "7";
+                        controller.pin2.value += "7";
                       },
                       child: Container(
                         height: 80,
@@ -323,7 +403,7 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value += "8";
+                        controller.pin2.value += "8";
                       },
                       child: Container(
                         height: 80,
@@ -358,7 +438,7 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value += "9";
+                        controller.pin2.value += "9";
                       },
                       child: Container(
                         height: 80,
@@ -403,12 +483,12 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () async {
-                        // controller.pin.value += "1";
+                        // controller.pin2.value += "1";
 
                         var localAuth = LocalAuthentication();
                         bool didAuthenticate = await localAuth.authenticate(
                             localizedReason:
-                                'Please authenticate to show account balance',
+                            'Please authenticate to show account balance',
                             biometricOnly: true);
                       },
                       child: Container(
@@ -450,7 +530,7 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value += "0";
+                        controller.pin2.value += "0";
                       },
                       child: Container(
                         height: 80,
@@ -485,8 +565,8 @@ class ChangePinScreen extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.pin.value = controller.pin.value
-                            .substring(0, controller.pin.value.length - 1);
+                        controller.pin2.value = controller.pin2.value
+                            .substring(0, controller.pin2.value.length - 1);
                       },
                       child: Container(
                         height: 80,
@@ -528,7 +608,7 @@ class ChangePinScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      ):const Center(child: CircularProgressIndicator(color: kBlueColor,),),
       body: CustomScrollView(slivers: [
         SliverToBoxAdapter(
           child: SizedBox(
@@ -545,7 +625,7 @@ class ChangePinScreen extends StatelessWidget {
           centerTitle: false,
           backgroundColor: Colors.transparent,
           title: Text(
-            "Change pin".tr,
+            "New pin".tr,
             style: TextStyle(
               color: Color(0xff1e1e20),
               fontSize: 24.sp.sp,
@@ -563,7 +643,7 @@ class ChangePinScreen extends StatelessWidget {
               SizedBox(
                 width: 343,
                 child: Text(
-                  "Enter the old pin".tr,
+                  "Enter the new pin".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xff1e1e20),
@@ -572,30 +652,30 @@ class ChangePinScreen extends StatelessWidget {
                 ),
               ),
               Obx(() => Container(
-                    width: 343,
-                    padding: const EdgeInsets.all(24),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        for (int i = 0; i < controller.pin.value.length; i++)
-                          Column(
-                            children: [
-                              Container(
-                                width: 12,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xff4a5aff),
-                                ),
-                              ),
-                              SizedBox(width: 20.w),
-                            ],
-                          )
-                      ],
-                    ),
-                  )),
+                width: 343,
+                padding: const EdgeInsets.all(24),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    for (int i = 0; i < controller.pin2.value.length; i++)
+                      Column(
+                        children: [
+                          Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color(0xff4a5aff),
+                            ),
+                          ),
+                          SizedBox(width: 20.w),
+                        ],
+                      )
+                  ],
+                ),
+              )),
               SizedBox(
                 height: 119.h,
               ),

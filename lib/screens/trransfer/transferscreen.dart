@@ -35,7 +35,7 @@ class TransferScreen extends StatelessWidget {
           pinned: true,
           backgroundColor: Colors.transparent,
           title: Text(
-            "Transfer",
+            "Transfer".tr,
             style: TextStyle(
               color: Color(0xff1e1e20),
               fontSize: 24.sp,
@@ -47,13 +47,13 @@ class TransferScreen extends StatelessWidget {
         SliverToBoxAdapter(
           child: SafeArea(
             child: Column(children: [
-              itemTille("assets/icons/username.svg", "via username", () {
+              itemTille("assets/icons/username.svg", "via username".tr, () {
                 Get.to(SelectUser());
               }),
-              itemTille("assets/icons/qrcode.svg", "via QR code", () {
+              itemTille("assets/icons/qrcode.svg", "via QR code".tr, () {
                 Get.to(QrTransfer());
               }),
-              itemTille("assets/icons/link.svg", "via link", () {
+              itemTille("assets/icons/link.svg", "via link".tr, () {
                 Get.to(LinkTransfer());
               }),
               Container(
@@ -108,7 +108,7 @@ class TransferScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "via phone number",
+                            "via phone number".tr,
                             style: TextStyle(
                               color: Color(0xccacacb0),
                               fontSize: 14,
@@ -118,7 +118,7 @@ class TransferScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 2),
                           Text(
-                            "Coming soon",
+                            "Coming soon".tr,
                             style: TextStyle(
                               color: Color(0xccacacb0),
                               fontSize: 12,
@@ -208,7 +208,7 @@ class TransferScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 16),
+            SizedBox(width: 10.w),
             Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -227,27 +227,16 @@ class TransferScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 16),
+            SizedBox(width: 10.w),
             Container(
-              width: 24.w,
-              height: 24.h,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: const Icon(
+                Icons.arrow_forward_ios_outlined,
+                color: Colors.grey,
               ),
             ),
           ],

@@ -1,18 +1,86 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/parser.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:simpe/app/themes/app_colors.dart';
 import 'package:simpe/screens/login/enter_pin.dart';
 import 'package:simpe/screens/login/login_controller.dart';
-import 'package:simpe/screens/login/otp_screen.dart';
+import 'package:http/http.dart'as http;
+import '../../services/apis.dart';
+import '../../services/keys.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   LoginController controller = Get.put(LoginController());
+  String ticket = "";
+  bool isLoad = false;
+
+  Future<void> loginWithUsername(String username) async{
+
+    try{
+      var response = await http.post(
+        Uri.parse('${Apis.baseUrl}${Apis.login}'),
+        headers: {
+          "Content-Type": contentType
+        },
+        body: jsonEncode(<String, String>{
+          "username": username
+        }),
+      );
+      var res = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        if(mounted){
+          setState(() {
+            isLoad = false;
+            ticket = res["ticket"];
+          });
+        }
+        Get.snackbar("Success", "Username Verified.",backgroundColor: Colors.green,colorText: Colors.white);
+        Get.to(EnterPin(ticket:ticket,username:username));
+      }
+      else {
+        if(mounted){
+          setState(() {
+            isLoad = false;
+          });
+        }
+         Get.snackbar("Error", res["_embedded"]["errors"][0]["message"].toString(),backgroundColor: Colors.amberAccent,colorText: Colors.white);
+        throw Exception("Error");
+      }
+
+    } on SocketException {
+      if(mounted){
+        setState(() {
+          isLoad = false;
+        });
+      }
+      Get.snackbar("Error", "No Internet Connection.",backgroundColor: Colors.red,colorText: Colors.white);
+    } on HttpException {
+      if(mounted){
+        setState(() {
+          isLoad = false;
+        });
+      }
+      Get.snackbar("Error", "Couldn't find the data 😱.",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+    } on FormatException {
+      if(mounted){
+        setState(() {
+          isLoad = false;
+        });
+      }
+      Get.snackbar("Error", "Bad response format 👎",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +97,15 @@ class LoginScreen extends StatelessWidget {
       bottomSheet: Obx(
         () => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: InkWell(
+          child:isLoad == false? InkWell(
             onTap: () {
-              Get.to(EnterPin());
+              if(mounted){
+                setState(() {
+                  isLoad = true;
+                });
+              }
+              loginWithUsername(controller.username.value.toString());
+
             },
             child: Container(
               width: 343.w,
@@ -52,7 +126,7 @@ class LoginScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Continue",
+                    "Continue".tr,
                     style: TextStyle(
                       color: controller.username.isEmpty
                           ? Color(0xccacacb0)
@@ -65,7 +139,7 @@ class LoginScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+          ):const Center(child:CircularProgressIndicator(color: kBlueColor,),),
         ),
       ),
 
@@ -76,7 +150,7 @@ class LoginScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: Text(
-          "Enter your username",
+          "Enter your username".tr,
           style: TextStyle(
             color: Color(0xff1e1e20),
             fontSize: 14.sp,
@@ -116,7 +190,7 @@ class LoginScreen extends StatelessWidget {
                   enabledBorder: InputBorder.none,
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
-                  hintText: "username",
+                  hintText: "username".tr,
                   hintStyle: TextStyle(
                     color: Color(0xff1e1e20),
                     fontFamily: "DMSans",

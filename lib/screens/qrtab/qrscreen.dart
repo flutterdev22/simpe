@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-
-import '../../app/themes/app_colors.dart';
-import '../trransfer/success.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:simpe/services/reuseableData.dart';
 
 class QrTabScreen extends StatelessWidget {
   const QrTabScreen({Key? key}) : super(key: key);
@@ -27,53 +24,32 @@ class QrTabScreen extends StatelessWidget {
             height: 20.h,
           ),
         ),
-        // SliverAppBar(
-        //   automaticallyImplyLeading: false,
-        //   iconTheme: IconThemeData(
-        //     color: kBlackColor, //change your color here
-        //   ),
-        //   pinned: true,
-        //   centerTitle: true,
-        //   backgroundColor: Colors.transparent,
-        //   title: Text(
-        //     "Payment methods",
-        //     style: TextStyle(
-        //       color: Color(0xff1e1e20),
-        //       fontSize: 24.sp,
-        //       fontFamily: "DMSans",
-        //       fontWeight: FontWeight.w500,
-        //     ),
-        //   ),
-        // ),
         SliverToBoxAdapter(
           child: Column(
             children: [
               SizedBox(
                 height: 40.h,
               ),
-              // SizedBox(
-              //   height: 24.h,
-              // ),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 327.w,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
+                        SizedBox(
                           width: 327.w,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 327.w,
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -83,10 +59,10 @@ class QrTabScreen extends StatelessWidget {
                                     SizedBox(
                                       width: double.infinity,
                                       child: Text(
-                                        "My QR code",
+                                        "My QR code".tr,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          color: Color(0xff1e1e20),
+                                          color: const Color(0xff1e1e20),
                                           fontSize: 24.sp,
                                           fontFamily: "DMSans",
                                           fontWeight: FontWeight.w500,
@@ -97,10 +73,10 @@ class QrTabScreen extends StatelessWidget {
                                     SizedBox(
                                       width: double.infinity,
                                       child: Text(
-                                        "Show the QR code to\nreceive a transfer",
+                                        "Show the QR code to\nreceive a transfer".tr,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          color: Color(0xccacacb0),
+                                          color: const Color(0xccacacb0),
                                           fontSize: 14.sp,
                                           fontFamily: "DMSans",
                                         ),
@@ -115,7 +91,7 @@ class QrTabScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Container(
                     width: 327.w,
                     height: 451.h,
@@ -132,7 +108,7 @@ class QrTabScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
+                            SizedBox(
                               width: 191.69.w,
                               height: 191.h,
                               child: Image.asset("assets/imges/image 1.png"),
@@ -141,10 +117,10 @@ class QrTabScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 24.h),
                         Text(
-                          "@diogo.murano",
+                          reuseableData.username,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Color(0xff1e1e20),
+                            color: const Color(0xff1e1e20),
                             fontSize: 24.sp,
                             fontFamily: "DMSans",
                             fontWeight: FontWeight.w500,
@@ -162,7 +138,7 @@ class QrTabScreen extends StatelessWidget {
                       height: 50.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6),
-                        color: Color(0xff4a5aff),
+                        color: const Color(0xff4a5aff),
                       ),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
@@ -172,9 +148,9 @@ class QrTabScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Transfer to someone via QR code",
+                            "Transfer to someone via QR code".tr,
                             style: TextStyle(
-                              color: Color(0xfffcfcfc),
+                              color: const Color(0xfffcfcfc),
                               fontSize: 14.sp,
                               fontFamily: "DMSans",
                               fontWeight: FontWeight.w500,
@@ -194,7 +170,7 @@ class QrTabScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
-                          color: Color(0xff423fff),
+                          color: const Color(0xff423fff),
                           width: 1,
                         ),
                       ),
@@ -203,7 +179,7 @@ class QrTabScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                             width: 16,
                             height: 16,
                             child: Row(
@@ -223,12 +199,12 @@ class QrTabScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
-                            "Share",
+                            "Share".tr,
                             style: TextStyle(
-                              color: Color(0xff423fff),
-                              fontSize: 14,
+                              color: const Color(0xff423fff),
+                              fontSize: 14.sp,
                               fontFamily: "DM Sans",
                               fontWeight: FontWeight.w500,
                             ),

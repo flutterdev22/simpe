@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:simpe/app/themes/app_colors.dart';
-import 'package:simpe/screens/Home/homescreen_page.dart';
-import 'package:simpe/screens/Tabview/tabscreen.dart';
 import 'package:simpe/screens/login/login_screen.dart';
 import 'package:simpe/screens/login/otp_screen.dart';
 import 'package:simpe/screens/signup/signup_screen.dart';
@@ -48,7 +46,7 @@ class MainScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Center(
               child: Text(
-                'Create account',
+                'Create account'.tr,
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     color: kBlueColor,
@@ -74,10 +72,10 @@ class MainScreen extends StatelessWidget {
             height: 44.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
-                bottomLeft: Radius.circular(8),
-                bottomRight: Radius.circular(8),
+                topLeft: Radius.circular(8.r),
+                topRight: Radius.circular(8.r),
+                bottomLeft: Radius.circular(8.r),
+                bottomRight: Radius.circular(8.r),
               ),
               color: kBlueColor,
               // borderRadius: BorderRadius.all(Radius.circular(50))
@@ -85,7 +83,7 @@ class MainScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Center(
               child: Text(
-                'Login',
+                'Login'.tr,
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     color: Color.fromRGBO(252, 252, 252, 1),
@@ -107,7 +105,7 @@ class MainScreen extends StatelessWidget {
             Get.to(OtpScreen());
           },
           child: Text(
-            "Recover access",
+            "Recover access".tr,
             style: TextStyle(
               color: Color(0xff423fff),
               fontSize: 18.sp,
@@ -147,19 +145,19 @@ class MainScreen extends StatelessWidget {
                 ),
           ),
           SizedBox(height: 16.h),
-          const Text(
-            "The easiest way to transfer or send money",
+           Text(
+            "The easiest way to transfer or send money".tr,
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Color.fromRGBO(172, 172, 176, 0.800000011920929),
-                fontSize: 14,
+                fontSize: 14.sp,
                 letterSpacing:
                     0 /*percentages not used in flutter. defaulting to zero*/,
                 fontWeight: FontWeight.normal,
-                height: 1.5 /*PERCENT not supported*/
+                height: 1.5.h /*PERCENT not supported*/
                 ),
           ),
-          SizedBox(height: 16.h),
+         
         ],
       ),
     );

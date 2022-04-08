@@ -35,7 +35,7 @@ class SuccessTransfer extends StatelessWidget {
               height: 16.h,
             ),
             Text(
-              "Transfer made successfully",
+              "Transfer made successfully".tr,
               style: TextStyle(
                 color: Color(0xfffcfcfc),
                 fontSize: 24.sp,
@@ -64,7 +64,7 @@ class SuccessTransfer extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "Go back",
+                        "Go back".tr,
                         style: TextStyle(
                           color: Color(0xFF423FFF),
                           fontSize: 14.sp,

@@ -1,13 +1,44 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simpe/services/reuseableData.dart';
 import '../../app/themes/app_colors.dart';
 
-class MySimpeScreen extends StatelessWidget {
+class MySimpeScreen extends StatefulWidget {
   const MySimpeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MySimpeScreen> createState() => _MySimpeScreenState();
+}
+
+class _MySimpeScreenState extends State<MySimpeScreen> {
+  TextEditingController username= TextEditingController();
+  TextEditingController email= TextEditingController();
+  TextEditingController phone= TextEditingController();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserData();
+    log(reuseableData.pin.toString());
+  }
+
+  void getUserData() async{
+    if(mounted){
+      setState(() {
+        username.text = reuseableData.username;
+        email.text = reuseableData.email;
+        phone.text = reuseableData.phone;
+      });
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +67,7 @@ class MySimpeScreen extends StatelessWidget {
           centerTitle: false,
           backgroundColor: Colors.transparent,
           title: Text(
-            "My Simpe",
+            "My Simpe".tr,
             style: TextStyle(
               color: Color(0xff1e1e20),
               fontSize: 24.sp,
@@ -54,7 +85,7 @@ class MySimpeScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Username",
+                  "Username".tr,
                   style: TextStyle(
                     color: Color(0xccacacb0),
                     fontSize: 14.sp,
@@ -94,6 +125,7 @@ class MySimpeScreen extends StatelessWidget {
                     SizedBox(width: 8.w),
                     Expanded(
                       child: TextFormField(
+                        controller: username,
                         style: TextStyle(
                           color: kBlackColor,
                           fontSize: 14.sp,
@@ -124,10 +156,10 @@ class MySimpeScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "For any interaction with Simpe users, report your username. That's why they will find you",
+                  "For any interaction with Simpe users, report your username. That's why they will find you".tr,
                   style: TextStyle(
                     color: Color(0xccacacb0),
-                    fontSize: 12,
+                    fontSize: 12.sp,
                   ),
                 ),
               ),
@@ -137,7 +169,7 @@ class MySimpeScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Email",
+                  "Email".tr,
                   style: TextStyle(
                     color: Color(0xccacacb0),
                     fontSize: 14.sp,
@@ -163,6 +195,7 @@ class MySimpeScreen extends StatelessWidget {
                   horizontal: 16,
                 ),
                 child: TextFormField(
+                  controller: email,
                   style: TextStyle(
                     color: kBlackColor,
                     fontSize: 14.sp,
@@ -190,10 +223,10 @@ class MySimpeScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Email is used to access your account or recover your password.",
+                  "Email is used to access your account or recover your password.".tr,
                   style: TextStyle(
                     color: Color(0xccacacb0),
-                    fontSize: 12,
+                    fontSize: 12.sp,
                   ),
                 ),
               ),
@@ -203,7 +236,7 @@ class MySimpeScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Phone number",
+                  "Phone number".tr,
                   style: TextStyle(
                     color: Color(0xccacacb0),
                     fontSize: 14.sp,
@@ -229,6 +262,7 @@ class MySimpeScreen extends StatelessWidget {
                   horizontal: 16,
                 ),
                 child: TextFormField(
+                  controller: phone,
                   style: TextStyle(
                     color: kBlackColor,
                     fontSize: 14.sp,
@@ -256,10 +290,10 @@ class MySimpeScreen extends StatelessWidget {
               SizedBox(
                 width: 327.w,
                 child: Text(
-                  "Mobile number linked to your Simpe account",
+                  "Mobile number linked to your Simpe account".tr,
                   style: TextStyle(
                     color: Color(0xccacacb0),
-                    fontSize: 12,
+                    fontSize: 12.sp,
                   ),
                 ),
               ),
@@ -321,7 +355,7 @@ Widget getTextField(title, hint) {
                     "Diogo Murano",
                     style: TextStyle(
                       color: Color(0xff1e1e20),
-                      fontSize: 14,
+                      fontSize: 14.sp,
                     ),
                   ),
                 ],

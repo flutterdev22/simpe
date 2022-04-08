@@ -1,10 +1,89 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:simpe/services/reuseableData.dart';
 
-class WithDrawBalance extends StatelessWidget {
+import '../../app/themes/app_colors.dart';
+import 'package:http/http.dart' as http;
+
+import '../../services/apis.dart';
+import '../../services/keys.dart';
+
+class WithDrawBalance extends StatefulWidget {
   const WithDrawBalance({Key? key}) : super(key: key);
 
+  @override
+  State<WithDrawBalance> createState() => _WithDrawBalanceState();
+}
+
+class _WithDrawBalanceState extends State<WithDrawBalance> {
+  bool isLoading = false;
+
+  Future<void> withdraw(String value) async{
+
+    try{
+      var response = await http.post(
+        Uri.parse('${Apis.baseUrl}v1/withdraw'),
+        headers: {
+          "Content-Type": contentType,
+          "Authorization": "Bearer ${reuseableData.token}"
+        },
+        body: jsonEncode(<String, String>{
+          "key_type": reuseableData.email,
+          "pix_key": reuseableData.email,
+          "value": value,
+          "currency": reuseableData.currency,
+        }),
+      );
+
+      if (response.statusCode == 204) {
+        Get.snackbar("Success", "Withdraw Successful.",backgroundColor: Colors.green,colorText: Colors.white);
+
+        if(mounted){
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+      else {
+        Get.snackbar("Error", "Something went wrong.",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+        if(mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+        throw Exception("Error");
+      }
+
+    } on SocketException {
+      Get.snackbar("Error", "No Internet Connection.",backgroundColor: Colors.red,colorText: Colors.white);
+      if(mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } on HttpException {
+      if(mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      Get.snackbar("Error", "Couldn't find the data 😱.",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+    } on FormatException {
+      if(mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      Get.snackbar("Error", "Bad response format 👎",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+    }
+  }
+
+
+  TextEditingController value = TextEditingController();
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(
@@ -36,7 +115,7 @@ class WithDrawBalance extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: Text(
-                  "Withdraw balance",
+                  "Withdraw balance".tr,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: Color(0xff1e1e20),
@@ -60,7 +139,7 @@ class WithDrawBalance extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: Text(
-                  "Choose how you want to withdraw money from your Simpe account",
+                  "Choose how you want to withdraw money from your Simpe account".tr,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: Color(0xff1e1e20),
@@ -79,7 +158,7 @@ class WithDrawBalance extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(12))),
                 child: ListTile(
                   title: Text(
-                    "Withdrawal to bank account",
+                    "Withdrawal to bank account".tr,
                     style: TextStyle(
                       color: Color(0xff1e1e20),
                       fontSize: 14.sp,
@@ -94,7 +173,7 @@ class WithDrawBalance extends StatelessWidget {
                   subtitle: SizedBox(
                     width: 199.h,
                     child: Text(
-                      "Available at your bank",
+                      "Available at your bank".tr,
                       style: TextStyle(
                         color: Color(0xff1e1e20),
                         fontSize: 12.sp,
@@ -108,16 +187,63 @@ class WithDrawBalance extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 50.h,
+              Container(
+                width: 327.w,
+                height: 44.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: Color(0xcce9ebec),
+                    width: 1,
+                  ),
+                  color: Color(0xcce9ebec),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                child: TextFormField(
+                  controller: value,
+                  keyboardType: TextInputType.number,
+                  style: TextStyle(
+                    color: kBlackColor,
+                    fontSize: 14.sp,
+                    fontFamily: "DMSans",
+                    fontWeight: FontWeight.w500,
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    hintText: "Diogo Murano",
+                    hintStyle: TextStyle(
+                      color: Color(0xff1e1e20),
+                      fontFamily: "DMSans",
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ),
               ),
-              Padding(
+              SizedBox(
+                height: 20.h,
+              ),
+              isLoading == false ?Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: InkWell(
                   onTap: () {
-                    Get.back();
-                    // Get.to(SuccessTransfer());
+                   if(value.text.isEmpty){
+                     Get.snackbar("Warning", "Add some value to withdraw",colorText: Colors.white,backgroundColor: Colors.red);
+                   }
+                   else{
+                     if(mounted){
+                       setState(() {
+                         isLoading = true;
+                       });
+                     }
+                     withdraw(value.text.toString());
+                   }
                   },
                   child: Container(
                     width: double.infinity,
@@ -131,7 +257,7 @@ class WithDrawBalance extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          "Continue",
+                          "Continue".tr,
                           style: TextStyle(
                             color: Color(0xfffcfcfc),
                             fontSize: 14.sp,
@@ -143,7 +269,8 @@ class WithDrawBalance extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
+              ):
+             const Center(child: CircularProgressIndicator(color: kBlueColor,),),
             ],
           ),
         ),

@@ -1,19 +1,99 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:simpe/screens/Home/tabs_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simpe/screens/login/login_controller.dart';
-import 'package:simpe/screens/settings/seetting_controller.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:simpe/services/reuseableData.dart';
 import '../../app/themes/app_colors.dart';
+import '../../services/apis.dart';
+import '../../services/keys.dart';
+import '../Home/tabs_view.dart';
 
-class EnterPin extends StatelessWidget {
-  EnterPin({Key? key}) : super(key: key);
+class EnterPin extends StatefulWidget {
+  String ticket;
+  String username;
+  EnterPin({Key? key,required this.ticket,required this.username}) : super(key: key);
 
+  @override
+  State<EnterPin> createState() => _EnterPinState();
+}
+
+class _EnterPinState extends State<EnterPin> {
   LoginController controller = Get.put(LoginController());
+
+  bool isLoad = false;
+
+  Future<void> enterPin(String code) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try{
+      var response = await http.post(
+        Uri.parse('${Apis.baseUrl}${Apis.loginValidate}'),
+        headers: {
+          "Content-Type": contentType
+        },
+        body: jsonEncode(<String, String>{
+          "ticket": widget.ticket,
+          "pin_code": code
+        }),
+      );
+
+      var res = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        if(mounted){
+          setState(() {
+           reuseableData.token =res["access_token"];
+           reuseableData.pin =code;
+          });
+        }
+        prefs.setString("username", widget.username);
+        prefs.setString("token", res["access_token"]);
+        prefs.setInt("expiry", res["expires_in"]);
+
+        Get.snackbar("Success", "Pin verified Successfully!",backgroundColor: Colors.green,colorText: Colors.white);
+        Get.to(TabView());
+      }
+      else {
+        if(mounted){
+          setState(() {
+            isLoad = false;
+          });
+        }
+        Get.snackbar("Error", res["_embedded"]["errors"][0]["message"].toString(),backgroundColor: Colors.amberAccent,colorText: Colors.white);
+        throw Exception("Error");
+      }
+
+    } on SocketException {
+      if(mounted){
+        setState(() {
+          isLoad = false;
+        });
+      }
+      Get.snackbar("Error", "No Internet Connection.",backgroundColor: Colors.red,colorText: Colors.white);
+    } on HttpException {
+      if(mounted){
+        setState(() {
+          isLoad = false;
+        });
+      }
+      Get.snackbar("Error", "Couldn't find the data 😱.",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+    } on FormatException {
+      if(mounted){
+        setState(() {
+          isLoad = false;
+        });
+      }
+      Get.snackbar("Error", "Bad response format 👎",backgroundColor: Colors.amberAccent,colorText: Colors.white);
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +107,7 @@ class EnterPin extends StatelessWidget {
     );
 
     return Scaffold(
-      bottomNavigationBar: Container(
+      bottomNavigationBar: isLoad == false? Container(
         width: 327.w,
         margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 80.h),
         child: Column(
@@ -67,7 +147,7 @@ class EnterPin extends StatelessWidget {
                   ),
                   SizedBox(width: 8),
                   Text(
-                    "I forgot my pin",
+                    "I forgot my pin".tr,
                     style: TextStyle(
                       color: Color(0xff423fff),
                       fontSize: 14.sp,
@@ -441,7 +521,7 @@ class EnterPin extends StatelessWidget {
                         var localAuth = LocalAuthentication();
                         bool didAuthenticate = await localAuth.authenticate(
                             localizedReason:
-                                'Please authenticate to show account balance',
+                                'Please authenticate to show account balance'.tr,
                             biometricOnly: true);
                         if (didAuthenticate) {
                           controller.pin.value = "12345";
@@ -564,7 +644,7 @@ class EnterPin extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      ):Center(child: CircularProgressIndicator(color:kBlueColor,),),
       body: CustomScrollView(slivers: [
         SliverToBoxAdapter(
           child: SizedBox(
@@ -629,13 +709,11 @@ class EnterPin extends StatelessWidget {
         SliverToBoxAdapter(
           child: Column(
             children: [
-              SizedBox(
-                height: 111.h,
-              ),
+              SizedBox(height: 50,),
               SizedBox(
                 width: 343,
                 child: Text(
-                  "Enter your pin",
+                  "Enter your pin".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xff1e1e20),
@@ -644,7 +722,6 @@ class EnterPin extends StatelessWidget {
                 ),
               ),
               Obx(() => Container(
-                    width: 343,
                     padding: const EdgeInsets.all(24),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -668,73 +745,25 @@ class EnterPin extends StatelessWidget {
                       ],
                     ),
                   )),
-              SizedBox(
-                height: 119.h,
-              ),
+
+
             ],
           ),
         )
       ]),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        onPressed: (){
+          if(mounted){
+            setState(() {
+              isLoad = true;
+            });
+          }
+          enterPin(controller.pin.value.toString());
+        },
+        child: Icon(Icons.send,color: kBlueColor,),
+      ),
     );
   }
 }
 
-Widget getTextField(title, hint) {
-  return Column(
-    children: [
-      SizedBox(
-        width: 327.w,
-        child: Text(
-          title,
-          style: TextStyle(
-            color: Color(0xccacacb0),
-            fontSize: 14.sp,
-            fontFamily: "DMSans",
-          ),
-        ),
-      ),
-      SizedBox(
-        height: 10.h,
-      ),
-      Container(
-        width: 327.w,
-        height: 44.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(
-            color: Color(0xcce9ebec),
-            width: 1,
-          ),
-          color: Color(0xcce9ebec),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Diogo Murano",
-                    style: TextStyle(
-                      color: Color(0xff1e1e20),
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
